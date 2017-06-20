@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Update</title>
+</head>
+<body>
+
+	Nome: <input type="text" id="nome">
+	<br>
+	Vagas: <input type="number" id="vagas">
+	<br>
+	<button type="button" id="btn">Enviar</button>	
+
+<!--INSIRA AQUI AS TAGS NECESSÁRIAS PARA CONECTAR
+	ESTE PROJETO COM O PROJETO FIREBASE
+
+	VOCÊ ENCONTRA AS TAGS QUANDO CRIA O PROJETO
+	E SELECIONA A OPÇÃO "ADICIONAR O FIREBASE AO SEU APLICATIVO WEB"-->
+
+	<script type="text/javascript">
+
+		var id = sessionStorage.getItem("id");
+
+		var database = firebase.database();
+
+		var ref = database.ref().child("eventos").child(id);
+
+
+		//CARREGA AS INFORMAÇÕES DO EVENTO
+		ref.on('value', function(data){
+			var evento = data.val();
+
+			document.getElementById("nome").value = evento.nome;
+			document.getElementById("vagas").value = evento.vagas;
+		});
+
+		var btn = document.getElementById("btn");
+
+		//ATUALIZA AS INFORMAÇÕES DO EVENTO
+		btn.addEventListener("click", function(){
+			var nomeForm = document.getElementById("nome").value;
+			var vagasForm = document.getElementById("vagas").value;
+
+
+			var obj = {
+					   nome: nomeForm,
+					   vagas: vagasForm
+					  };
+
+			var database = firebase.database();
+
+			ref = database.ref();
+
+			var updates = {};
+
+			updates["eventos/"+id] = obj;
+
+			ref.update(updates);
+
+		});
+
+
+
+	</script>
+
+</body>
+</html>

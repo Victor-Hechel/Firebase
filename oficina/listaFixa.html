@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lista</title>
+</head>
+<body>
+	<h1>Lista</h1>
+
+	<div id="lista"></div>
+
+<!--INSIRA AQUI AS TAGS NECESSÁRIAS PARA CONECTAR
+	ESTE PROJETO COM O PROJETO FIREBASE
+
+	VOCÊ ENCONTRA AS TAGS QUANDO CRIA O PROJETO
+	E SELECIONA A OPÇÃO "ADICIONAR O FIREBASE AO SEU APLICATIVO WEB"-->
+
+	<script type="text/javascript">
+		var database = firebase.database();
+
+		var ref = database.ref("eventos");
+
+		var div = document.getElementById("lista");
+
+		//LISTA TODOS OS EVENTOS DE FORMA ESTÁTICA
+		ref.once('value', function(data){
+			var eventos = data.val();
+
+			var chaves = Object.keys(eventos);
+
+			for (var i = 0; i < chaves.length; i++) {
+				var evento = eventos[chaves[i]];
+
+				div.innerHTML += "chave: "+chaves[i]+"<br>Nome: "+evento.nome + "<br>Vagas: " + evento.vagas + "<br><button onclick=remove('" + chaves[i] + "')>Excluir</button><br>"+"<button onclick=update('"+chaves[i]+"')>Update</button><br>---------<br>";
+			}
+		});
+
+		//MÉTODO PARA REMOVER O EVENTO DO BANCO
+		function remove(id){
+			var database = firebase.database();
+			var ref = database.ref().child("eventos").child(id);
+
+			ref.remove();
+		}
+
+		function update(id){
+			sessionStorage.setItem("id", id);
+			window.location.href = 'update.html';
+		}
+
+	</script>
+
+</body>
+</html>
+

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+</head>
+<body>
+
+<h1>Cadastro de eventos</h1>
+
+Nome: <input type="text" id="nome">
+<br>
+Vagas: <input type="number" id="vagas">
+<br>
+<button type="button" id="btn">Enviar</button>
+
+
+<h1>Lista</h1>
+
+<div id="lista"></div>
+
+<!--INSIRA AQUI AS TAGS NECESSÁRIAS PARA CONECTAR
+	ESTE PROJETO COM O PROJETO FIREBASE
+
+	VOCÊ ENCONTRA AS TAGS QUANDO CRIA O PROJETO
+	E SELECIONA A OPÇÃO "ADICIONAR O FIREBASE AO SEU APLICATIVO WEB"-->
+
+
+<script type="text/javascript">
+	var btn = document.getElementById("btn");
+	var div = document.getElementById("lista");
+
+	btn.addEventListener("click", function(){
+		var nomeForm = document.getElementById("nome").value;
+		var vagasForm = document.getElementById("vagas").value;
+
+
+		var obj = {
+				   nome: nomeForm,
+				   vagas: vagasForm
+				  };
+
+
+
+		var database = firebase.database();
+
+
+		//INSERE O OBJETO NO BANCO A CHAVE "1"
+
+		//var ref = database.ref().child("eventos").child("1");
+		//ref.set(obj);
+
+
+		//INSERE O OBJETO NO BANCO COM UMA CHAVE ÚNICA ALEATÓRIA GERADA AUTOMATICAMENTE
+
+		ref = database.ref().child("eventos");
+
+		ref.push(obj);
+
+	});
+
+	var database = firebase.database();
+
+	var ref = database.ref().child("eventos");
+
+	//LISTA TODOS OS EVENTOS DINAMICAMENTE
+	ref.on('child_added', function(data){
+		var evento = data.val();
+		div.innerHTML += evento.nome + ": " + evento.vagas + "<br>";
+	});
+
+</script>
+
+
+</body>
+</html>
